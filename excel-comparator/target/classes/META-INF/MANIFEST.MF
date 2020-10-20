@@ -1,0 +1,83 @@
+Manifest-Version: 1.0
+Built-By: ipras
+Build-Jdk: 14.0.2
+Class-Path: libs/spring-context-5.2.8.RELEASE.jar libs/spring-aop-5.2.8.
+ RELEASE.jar libs/spring-beans-5.2.8.RELEASE.jar libs/spring-core-5.2.8.
+ RELEASE.jar libs/spring-jcl-5.2.8.RELEASE.jar libs/spring-expression-5.
+ 2.8.RELEASE.jar libs/poi-4.1.1.jar libs/commons-codec-1.13.jar libs/com
+ mons-collections4-4.4.jar libs/commons-math3-3.6.1.jar libs/poi-ooxml-4
+ .1.1.jar libs/poi-ooxml-schemas-4.1.1.jar libs/xmlbeans-3.1.0.jar libs/
+ commons-compress-1.19.jar libs/curvesapi-1.06.jar libs/org.eclipse.birt
+ .runtime_4.8.0-20180626-4.8.0.jar libs/org.eclipse.equinox.event_1.4.20
+ 0.v20180426-0845-4.8.0.jar libs/org.eclipse.core.expressions_3.6.100.v2
+ 0180426-1644-4.8.0.jar libs/org.eclipse.emf.common_2.14.0.v20180527-113
+ 4-4.8.0.jar libs/org.eclipse.osgi_3.13.0.v20180409-1500-4.8.0.jar libs/
+ org.apache.batik.dom.svg_1.7.0.v201011041433-4.8.0.jar libs/org.w3c.dom
+ .svg.extension_1.1.0.v201806261756-4.8.0.jar libs/org.eclipse.equinox.s
+ impleconfigurator_1.3.0.v20180502-1828-4.8.0.jar libs/org.eclipse.equin
+ ox.frameworkadmin.equinox_1.1.0.v20180512-1128-4.8.0.jar libs/org.apach
+ e.lucene.core_6.1.0.v20170814-1820-4.8.0.jar libs/org.eclipse.emf.ecore
+ _2.14.0.v20180529-1144-4.8.0.jar libs/org.apache.batik.transcoder_1.7.0
+ .v201011041433-4.8.0.jar libs/org.apache.commons.codec_1.9.0.v20170208-
+ 1614-4.8.0.jar libs/org.sat4j.core_2.3.5.v201308161310-4.8.0.jar libs/o
+ rg.apache.batik.ext.awt_1.7.0.v201011041433-4.8.0.jar libs/org.eclipse.
+ equinox.frameworkadmin_2.1.0.v20180131-0638-4.8.0.jar libs/org.w3c.dom.
+ smil_1.0.1.v200903091627-4.8.0.jar libs/org.tukaani.xz_1.8.0.v20180207-
+ 1613-4.8.0.jar libs/org.eclipse.datatools.connectivity.apache.derby_1.2
+ .1.201712071719-4.8.0.jar libs/org.eclipse.equinox.preferences_3.7.100.
+ v20180510-1129-4.8.0.jar libs/org.eclipse.equinox.app_1.3.500.v20171221
+ -2204-4.8.0.jar libs/org.apache.batik.dom_1.7.1.v201505191845-4.8.0.jar
+  libs/com.ibm.icu_58.2.0.v20170418-1837-4.8.0.jar libs/flute-4.8.0.jar 
+ libs/org.eclipse.emf.ecore.xmi_2.14.0.v20180129-1548-4.8.0.jar libs/org
+ .eclipse.datatools.connectivity.oda_3.6.1.201712071719-4.8.0.jar libs/o
+ rg.w3c.css.sac_1.3.1.v200903091627-4.8.0.jar libs/org.apache.batik.svgg
+ en_1.7.0.v201011041433-4.8.0.jar libs/org.apache.derby_10.11.1.1_v20160
+ 5202053-4.8.0.jar libs/org.eclipse.osgi.services_3.7.0.v20180223-1712-4
+ .8.0.jar libs/org.eclipse.datatools.connectivity.oda.consumer_3.4.1.201
+ 712071719-4.8.0.jar libs/org.eclipse.core.resources_3.13.0.v20180512-11
+ 38-4.8.0.jar libs/org.eclipse.equinox.simpleconfigurator.manipulator_2.
+ 1.0.v20180103-0918-4.8.0.jar libs/org.eclipse.datatools.connectivity.co
+ nsole.profile_1.2.1.201712071719-4.8.0.jar libs/org.apache.batik.css_1.
+ 7.0.v201011041433-4.8.0.jar libs/org.eclipse.equinox.registry_3.8.0.v20
+ 180426-1327-4.8.0.jar libs/javax.xml.stream_1.0.1.v201004272200-4.8.0.j
+ ar libs/org.eclipse.orbit.mongodb_3.2.2.v20170222-2110-4.8.0.jar libs/o
+ rg.eclipse.core.runtime_3.14.0.v20180417-0825-4.8.0.jar libs/org.mozill
+ a.javascript_1.7.5.v201504281450-4.8.0.jar libs/org.eclipse.update.conf
+ igurator_3.4.0.v20180512-1141-4.8.0.jar libs/org.apache.xerces_2.9.0.v2
+ 01101211617-4.8.0.jar libs/org.eclipse.datatools.connectivity.dbdefinit
+ ion.genericJDBC_1.2.1.201712071719-4.8.0.jar libs/org.w3c.dom.svg_1.1.0
+ .v201011041433-4.8.0.jar libs/org.eclipse.datatools.connectivity.oda.de
+ sign_3.5.1.201712071719-4.8.0.jar libs/javax.xml_1.3.4.v201005080400-4.
+ 8.0.jar libs/org.sat4j.pb_2.3.5.v201404071733-4.8.0.jar libs/org.eclips
+ e.datatools.connectivity.sqm.core_1.4.1.201712071719-4.8.0.jar libs/org
+ .eclipse.datatools.connectivity.oda.profile_3.4.1.201712071719-4.8.0.ja
+ r libs/org.eclipse.help_3.8.100.v20180512-1136-4.8.0.jar libs/org.eclip
+ se.emf.ecore.change_2.12.0.v20180125-1130-4.8.0.jar libs/org.apache.poi
+ _3.9.0.v201405241750-4.8.0.jar libs/org.apache.commons.logging_1.1.1.v2
+ 01101211721-4.8.0.jar libs/org.apache.lucene.queryparser_6.1.0.v2016111
+ 5-1612-4.8.0.jar libs/org.w3c.dom.events_3.0.0.draft20060413_v201105210
+ 656-4.8.0.jar libs/org.apache.xml.resolver_1.2.0.v201005080400-4.8.0.ja
+ r libs/org.eclipse.core.jobs_3.10.0.v20180427-1454-4.8.0.jar libs/org.e
+ clipse.equinox.security_1.2.400.v20171221-2204-4.8.0.jar libs/org.apach
+ e.batik.bridge_1.7.0.v201011041433-4.8.0.jar libs/org.apache.batik.pars
+ er_1.7.0.v201011041433-4.8.0.jar libs/org.eclipse.core.contenttype_3.7.
+ 0.v20180426-1644-4.8.0.jar libs/org.eclipse.core.filesystem_1.7.100.v20
+ 180304-1102-4.8.0.jar libs/org.apache.batik.xml_1.7.0.v201011041433-4.8
+ .0.jar libs/org.eclipse.equinox.ds_1.5.100.v20171221-2204-4.8.0.jar lib
+ s/org.apache.batik.util_1.7.0.v201011041433-4.8.0.jar libs/org.eclipse.
+ datatools.connectivity.oda.flatfile_3.3.1.201712071719-4.8.0.jar libs/o
+ rg.apache.batik.ext.awt.extension_1.7.0.v201806261756-4.8.0.jar libs/ja
+ vax.wsdl_1.5.1.v201012040544-4.8.0.jar libs/org.eclipse.osgi.util_3.5.0
+ .v20180219-1511-4.8.0.jar libs/org.eclipse.datatools.connectivity_1.14.
+ 1.201712071719-4.8.0.jar libs/org.apache.felix.scr_2.0.14.v20180117-145
+ 2-4.8.0.jar libs/org.eclipse.datatools.connectivity.apache.derby.dbdefi
+ nition_1.2.1.201712071719-4.8.0.jar libs/org.eclipse.datatools.connecti
+ vity.db.generic_1.2.1.201712071719-4.8.0.jar libs/org.apache.lucene.ana
+ lyzers-common_6.1.0.v20161115-1612-4.8.0.jar libs/org.apache.xml.serial
+ izer_2.7.1.v201005080400-4.8.0.jar libs/net.sourceforge.lpg.lpgjavarunt
+ ime_1.1.0.v201004271650-4.8.0.jar libs/org.apache.batik.util.gui_1.7.0.
+ v200903091627-4.8.0.jar libs/com.lowagie.text_2.1.7.v201004222200-4.8.0
+ .jar libs/org.eclipse.equinox.common_3.10.0.v20180412-1130-4.8.0.jar
+Main-Class: com.dev4k.birt.excelcomparator.Application
+Created-By: Maven Integration for Eclipse
+
