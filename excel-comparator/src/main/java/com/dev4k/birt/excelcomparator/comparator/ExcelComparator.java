@@ -55,7 +55,7 @@ public class ExcelComparator {
 		int[] fileNotFound = { 0, 0 };
 
 		// begin excel comparison
-		
+
 		// load souce file
 		FileInputStream file1 = null;
 		try {
@@ -74,6 +74,8 @@ public class ExcelComparator {
 			fileNotFoundMismatch(fileNotFound);
 			return design;
 		}
+
+		addInputParameters();
 
 		// create workbook objects using source files
 		Workbook workbook1 = WorkbookFactory.create(file1);
@@ -103,7 +105,7 @@ public class ExcelComparator {
 				 * sheet not found mismatch
 				 */
 				sheetNames1Iterator.remove();
-				sheetNotFoundException(currentSheet, 1);
+				addSheetNotFoundException(currentSheet, 1);
 			}
 
 		}
@@ -112,14 +114,12 @@ public class ExcelComparator {
 		while (sheetNames2Iterator.hasNext()) {
 			String currentSheet = sheetNames2Iterator.next();
 
-			if (sheetNames1.indexOf(currentSheet) != -1) {
-				matchedSheetNames.add(currentSheet);
-			} else {
+			if (sheetNames1.indexOf(currentSheet) == -1) {
 				/**
 				 * sheet not found mismatch
 				 */
 				sheetNames2Iterator.remove();
-				sheetNotFoundException(currentSheet, 2);
+				addSheetNotFoundException(currentSheet, 2);
 			}
 
 		}
@@ -134,8 +134,10 @@ public class ExcelComparator {
 		}
 
 		if (summaryGridRowCount == 1) {
-			noDiscrepancyFound();
+			addNoDiscrepancyFound();
 		}
+
+		addStyleSheet();
 
 		return design;
 	}
@@ -146,7 +148,8 @@ public class ExcelComparator {
 
 		// check if number of rows are equal
 		if (sheet1.getPhysicalNumberOfRows() != sheet2.getPhysicalNumberOfRows()) {
-			rowCountMismatch(sheet1.getSheetName(), sheet1.getPhysicalNumberOfRows(), sheet2.getPhysicalNumberOfRows());
+			addRowCountMismatch(sheet1.getSheetName(), sheet1.getPhysicalNumberOfRows(),
+					sheet2.getPhysicalNumberOfRows());
 		}
 
 		// create data structure to store header metadata
@@ -197,7 +200,7 @@ public class ExcelComparator {
 			if (columns2.containsKey(key)) {
 				matchedColumns1.put(key, mapElement.getValue());
 			} else {
-				missingColumn(sheet1.getSheetName(), key, 1);
+				addMissingColumn(sheet1.getSheetName(), key, 1);
 			}
 		}
 
@@ -211,12 +214,12 @@ public class ExcelComparator {
 			if (columns2.containsKey(key)) {
 				matchedColumns2.put(key, mapElement.getValue());
 			} else {
-				missingColumn(sheet1.getSheetName(), key, 2);
+				addMissingColumn(sheet1.getSheetName(), key, 2);
 			}
 		}
 
 		// compare data of each cell for matched/same column headers
-		Iterator<Entry<String, List<String>>> matchedColumnsIterator = matchedColumns2.entrySet().iterator();
+		Iterator<Entry<String, List<String>>> matchedColumnsIterator = matchedColumns1.entrySet().iterator();
 		while (matchedColumnsIterator.hasNext()) {
 			Map.Entry<String, List<String>> next = (Map.Entry<String, List<String>>) matchedColumnsIterator.next();
 
@@ -228,7 +231,7 @@ public class ExcelComparator {
 
 			for (int i = 0; i < values1.size(); i++) {
 				if (!values1.get(i).equals(values2.get(i))) {
-					valueMismatch(sheet1.getSheetName(), key, (i + 1), values1.get(i), values2.get(i));
+					addValueMismatch(sheet1.getSheetName(), key, (i + 1), values1.get(i), values2.get(i));
 				}
 			}
 
@@ -236,7 +239,7 @@ public class ExcelComparator {
 
 	}
 
-	private void noDiscrepancyFound() throws SemanticException {
+	private void addNoDiscrepancyFound() throws SemanticException {
 
 		GridHandle paramGrid = (GridHandle) design.findElement("SummaryGrid");
 		paramGrid.drop();
@@ -247,7 +250,7 @@ public class ExcelComparator {
 		design.getBody().add(text);
 	}
 
-	private void valueMismatch(String sheetName, String column, int i, String value1, String value2)
+	private void addValueMismatch(String sheetName, String column, int i, String value1, String value2)
 			throws SemanticException {
 		summaryGridRowCount++;
 
@@ -287,7 +290,7 @@ public class ExcelComparator {
 
 	}
 
-	private void missingColumn(String sheetName, String column, int posn) throws SemanticException {
+	private void addMissingColumn(String sheetName, String column, int posn) throws SemanticException {
 		summaryGridRowCount++;
 
 		GridHandle grid = (GridHandle) design.findElement("SummaryGrid");
@@ -312,7 +315,7 @@ public class ExcelComparator {
 
 	}
 
-	private void rowCountMismatch(String sheetName, int physicalNumberOfRows1, int physicalNumberOfRows2)
+	private void addRowCountMismatch(String sheetName, int physicalNumberOfRows1, int physicalNumberOfRows2)
 			throws SemanticException {
 		summaryGridRowCount++;
 
@@ -363,7 +366,7 @@ public class ExcelComparator {
 
 	}
 
-	private void sheetNotFoundException(String currentSheet, int posn) throws SemanticException {
+	private void addSheetNotFoundException(String currentSheet, int posn) throws SemanticException {
 		summaryGridRowCount++;
 
 		GridHandle grid = (GridHandle) design.findElement("SummaryGrid");
@@ -388,4 +391,53 @@ public class ExcelComparator {
 
 	}
 
+	private void addInputParameters() throws SemanticException {
+
+		GridHandle grid = (GridHandle) design.findElement("ParameterGrid");
+		TextItemHandle source1 = factory.newTextItem(null);
+		source1.setProperty("contentType", "HTML");
+		source1.setContent(sourcePath1);
+		TextItemHandle source2 = factory.newTextItem(null);
+		source2.setProperty("contentType", "HTML");
+		source2.setContent(sourcePath2);
+		CellHandle cell = grid.getCell(1, 2);
+		cell.setProperty("style", "cell");
+		cell.getContent().add(source1);
+		cell = grid.getCell(2, 2);
+		cell.setProperty("style", "cell");
+		cell.getContent().add(source2);
+
+	}
+
+	private void addStyleSheet() throws SemanticException {
+
+		// add style to title
+		TextItemHandle title = (TextItemHandle) design.findElement("title");
+		title.setProperty("style", "title");
+
+		// add style to parameter grid
+		GridHandle grid = (GridHandle) design.findElement("ParameterGrid");
+		grid.getCell(1, 1).setProperty("style", "cell");
+		grid.getCell(1, 2).setProperty("style", "cell");
+		grid.getCell(2, 1).setProperty("style", "cell");
+		grid.getCell(2, 2).setProperty("style", "cell");
+		
+
+		// add style to summary grid
+		grid = (GridHandle) design.findElement("SummaryGrid");
+		for(int i=1; i<=summaryGridRowCount; i++) {
+			grid.getCell(i, 1).setProperty("style", "cell");
+			grid.getCell(i, 2).setProperty("style", "cell");
+			grid.getCell(i, 3).setProperty("style", "cell");
+			grid.getCell(i, 4).setProperty("style", "cell");
+			grid.getCell(i, 5).setProperty("style", "cell");
+			grid.getCell(i, 6).setProperty("style", "cell");
+			
+		}
+		
+		for(int i=1; i<=6; i++) {
+			grid.getCell(1, i).setProperty("style", "header-cell");
+		}
+
+	}
 }

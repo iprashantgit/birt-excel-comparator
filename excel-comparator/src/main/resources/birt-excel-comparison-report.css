@@ -1,0 +1,33 @@
+.page {
+	background-color: #FFFFFF;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 24px;
+	color: #336699;
+}
+
+.title {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 24px;
+	line-height: 40px;
+	background-color: #99CC00;
+	color: #003333;
+	font-weight: bolder;
+	text-align: center
+}
+
+.grid{
+	border-style: solid;
+	border-width: 1px;
+}
+
+.header-cell{
+	color: 	#ffffff;
+	font-weight: bold;
+	background-color: #175893;
+}
+
+.cell{
+	border-style: solid;
+	border-width: 1px;
+}
