@@ -1,9 +1,13 @@
 package com.dev4k.birt.excelcomparator.designer;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.model.api.CellHandle;
 import org.eclipse.birt.report.model.api.DesignConfig;
+import org.eclipse.birt.report.model.api.DesignElementHandle;
 import org.eclipse.birt.report.model.api.ElementFactory;
 import org.eclipse.birt.report.model.api.GridHandle;
 import org.eclipse.birt.report.model.api.IDesignEngine;
@@ -13,10 +17,14 @@ import org.eclipse.birt.report.model.api.SessionHandle;
 import org.eclipse.birt.report.model.api.SimpleMasterPageHandle;
 import org.eclipse.birt.report.model.api.TextItemHandle;
 import org.eclipse.birt.report.model.api.css.CssStyleSheetHandle;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.ibm.icu.util.ULocale;
 
 public class ReportDesigner {
+
+	@Value("${report.output.format}")
+	private String outputType;
 
 	public ReportDesignHandle buildReport() throws BirtException {
 
@@ -35,10 +43,10 @@ public class ReportDesigner {
 
 		SessionHandle session = engine.newSessionHandle(ULocale.ENGLISH);
 		ReportDesignHandle design = session.createDesign();
-		
+
 		CssStyleSheetHandle css = design.openCssStyleSheet("birt-excel-comparison-report.css");
 		design.addCss(css);
-		
+
 		ElementFactory elementFactory = design.getElementFactory();
 
 		design.setTitle("Birt Excel Comparison Report");
@@ -56,20 +64,7 @@ public class ReportDesigner {
 		design.getBody().add(lineBreak);
 
 		// parameter grid
-		GridHandle paramGrid = elementFactory.newGridItem("ParameterGrid", 2, 2);
-		paramGrid.setOnRender("this.setWidth(8)");
-		TextItemHandle source1 = elementFactory.newTextItem(null);
-		source1.setProperty("contentType", "HTML");
-		source1.setContent("Source 1:");
-		TextItemHandle source2 = elementFactory.newTextItem(null);
-		source2.setProperty("contentType", "HTML");
-		source2.setContent("Source 2:");
-		CellHandle cell = paramGrid.getCell(1, 1);
-		cell.setProperty("style", "cell");
-		cell.getContent().add(source1);
-		cell = paramGrid.getCell(2, 1);
-		cell.setProperty("style", "cell");
-		cell.getContent().add(source2);
+		GridHandle paramGrid = elementFactory.newGridItem("ParameterGrid", 1, 2);
 		design.getBody().add(paramGrid);
 
 		// add a line break
@@ -78,26 +73,66 @@ public class ReportDesigner {
 		lineBreak.setContent("<br><br>");
 		design.getBody().add(lineBreak);
 
+		// add run date and time
+		TextItemHandle runDate = elementFactory.newTextItem("runDate");
+		runDate.setProperty("contentType", "HTML");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy HH:mm:ss");
+		runDate.setContent("Run Date: " + dateFormat.format(new Date()));
+		design.getBody().add(runDate);
+
+		// add a line break
+		lineBreak = elementFactory.newTextItem(null);
+		lineBreak.setProperty("contentType", "HTML");
+		lineBreak.setContent("<br>");
+		design.getBody().add(lineBreak);
+
 		// preparing summary grid
-		String[] headers = { "Sheet Name", "Mismatch Type", "Mismatch on Column", "Mismatch on Row", "Source 1",
-				"Source 2" };
+
+		// add table title
+		TextItemHandle tableTitle = elementFactory.newTextItem("tableTitle");
+		tableTitle.setProperty("contentType", "HTML");
+		tableTitle.setContent("<h3>Summary Grid<h3>");
+		design.getBody().add(tableTitle);
+
+		// add a line break
+		lineBreak = elementFactory.newTextItem(null);
+		lineBreak.setProperty("contentType", "HTML");
+		lineBreak.setContent("<br>");
+		design.getBody().add(lineBreak);
+
+		String[] headers = { "S.No.", "Sheet Name", "Mismatch Type", "Mismatch on Column", "Mismatch on Row",
+				"Source 1", "Source 2" };
 		TextItemHandle text = elementFactory.newTextItem(null);
 
 		GridHandle summaryGrid = elementFactory.newGridItem("SummaryGrid", headers.length, 1);
 		for (int i = 0; i < headers.length; i++) {
-			cell = summaryGrid.getCell(1, i + 1);
+			CellHandle cell = summaryGrid.getCell(1, i + 1);
 			text = elementFactory.newTextItem(null);
 			text.setProperty("contentType", "HTML");
 			text.setContent(headers[i]);
 			cell.getContent().add(text);
 		}
+
+		// setting width for fixed column
+		DesignElementHandle col1 = summaryGrid.getColumns().get(0);
+		col1.setProperty("width", ".5");
+		DesignElementHandle col3 = summaryGrid.getColumns().get(2);
+		col3.setProperty("width", "1.7");
+		DesignElementHandle col5 = summaryGrid.getColumns().get(4);
+		col5.setProperty("width", "1.7");
+
 		design.getBody().add(summaryGrid);
 
 		SimpleMasterPageHandle masterPage = elementFactory.newSimpleMasterPage("Master Page");
+		masterPage.setPageType("custom");
+		if (outputType.equals("html")) {
+			masterPage.setProperty("width", "100%");
+		} else if (outputType.equals("pdf")) {
+			masterPage.setProperty("width", "15in");
+		}
+
 		design.getMasterPages().add(masterPage);
-		
-		
-		
+
 		return design;
 	}
 

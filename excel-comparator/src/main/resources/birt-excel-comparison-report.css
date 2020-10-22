@@ -16,18 +16,20 @@
 	text-align: center
 }
 
-.grid{
-	border-style: solid;
-	border-width: 1px;
-}
-
 .header-cell{
 	color: 	#ffffff;
 	font-weight: bold;
 	background-color: #175893;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 .cell{
 	border-style: solid;
 	border-width: 1px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+.open-cell{
+	border-style: none;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
 }

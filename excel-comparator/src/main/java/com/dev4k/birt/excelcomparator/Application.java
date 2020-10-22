@@ -6,7 +6,6 @@ import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.report.model.api.ReportDesignHandle;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.dev4k.birt.excelcomparator.comparator.ExcelComparator;
@@ -16,18 +15,21 @@ public class Application {
 
 	public static void main(String[] args)
 			throws EncryptedDocumentException, InvalidFormatException, BirtException, IOException {
-		ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
 
-		ExcelComparator excelComparator = context.getBean(ExcelComparator.class);
+		try {
+			ExcelComparator excelComparator = context.getBean(ExcelComparator.class);
 
-		ReportDesignHandle design = excelComparator.compareExcel();
+			ReportDesignHandle design = excelComparator.compareExcel();
 
-		BirtReportEngine reportEngine = context.getBean(BirtReportEngine.class);
+			BirtReportEngine reportEngine = context.getBean(BirtReportEngine.class);
 
-		reportEngine.runReport(design);
+			reportEngine.runReport(design);
 
-		System.out.println("Excel Comparison Complete.");
-
+			System.out.println("Excel Comparison Complete.");
+		} finally {
+			context.close();
+		}
 	}
 
 }

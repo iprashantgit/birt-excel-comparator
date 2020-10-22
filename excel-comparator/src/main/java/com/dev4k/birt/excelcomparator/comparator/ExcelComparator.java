@@ -52,6 +52,9 @@ public class ExcelComparator {
 		design = reportDesigner.buildReport();
 		factory = design.getElementFactory();
 
+		// add input parameters to grid
+		addInputParameters();
+
 		int[] fileNotFound = { 0, 0 };
 
 		// begin excel comparison
@@ -74,8 +77,6 @@ public class ExcelComparator {
 			fileNotFoundMismatch(fileNotFound);
 			return design;
 		}
-
-		addInputParameters();
 
 		// create workbook objects using source files
 		Workbook workbook1 = WorkbookFactory.create(file1);
@@ -231,7 +232,7 @@ public class ExcelComparator {
 
 			for (int i = 0; i < values1.size(); i++) {
 				if (!values1.get(i).equals(values2.get(i))) {
-					addValueMismatch(sheet1.getSheetName(), key, (i + 1), values1.get(i), values2.get(i));
+					addValueMismatch(sheet1.getSheetName(), key, (i + 2), values1.get(i), values2.get(i));
 				}
 			}
 
@@ -241,8 +242,8 @@ public class ExcelComparator {
 
 	private void addNoDiscrepancyFound() throws SemanticException {
 
-		GridHandle paramGrid = (GridHandle) design.findElement("SummaryGrid");
-		paramGrid.drop();
+		GridHandle summaryGrid = (GridHandle) design.findElement("SummaryGrid");
+		summaryGrid.drop();
 		TextItemHandle text = factory.newTextItem(null);
 		text.setProperty("contentType", "HTML");
 		text.setContent("<b>No Discrepancy found between the Excel Sources.<b>");
@@ -259,31 +260,36 @@ public class ExcelComparator {
 		grid.insertRow(rowParam);
 
 		CellHandle cell = grid.getCell(summaryGridRowCount, 1);
+		TextItemHandle serialNo = factory.newTextItem(null);
+		serialNo.setContent(Integer.toString(summaryGridRowCount - 1));
+		cell.getContent().add(serialNo);
+
+		cell = grid.getCell(summaryGridRowCount, 2);
 		TextItemHandle sheetNameText = factory.newTextItem(null);
 		sheetNameText.setContent(sheetName);
 		cell.getContent().add(sheetNameText);
 
-		cell = grid.getCell(summaryGridRowCount, 2);
+		cell = grid.getCell(summaryGridRowCount, 3);
 		TextItemHandle mismatchType = factory.newTextItem(null);
 		mismatchType.setContent("Value Mismatch");
 		cell.getContent().add(mismatchType);
 
-		cell = grid.getCell(summaryGridRowCount, 3);
+		cell = grid.getCell(summaryGridRowCount, 4);
 		TextItemHandle columnName = factory.newTextItem(null);
 		columnName.setContent(column);
 		cell.getContent().add(columnName);
 
-		cell = grid.getCell(summaryGridRowCount, 4);
+		cell = grid.getCell(summaryGridRowCount, 5);
 		TextItemHandle rowNumber = factory.newTextItem(null);
 		rowNumber.setContent(Integer.toString(i));
 		cell.getContent().add(rowNumber);
 
-		cell = grid.getCell(summaryGridRowCount, 5);
+		cell = grid.getCell(summaryGridRowCount, 6);
 		TextItemHandle source1Text = factory.newTextItem(null);
 		source1Text.setContent(value1);
 		cell.getContent().add(source1Text);
 
-		cell = grid.getCell(summaryGridRowCount, 6);
+		cell = grid.getCell(summaryGridRowCount, 7);
 		TextItemHandle source2Text = factory.newTextItem(null);
 		source2Text.setContent(value2);
 		cell.getContent().add(source2Text);
@@ -298,16 +304,21 @@ public class ExcelComparator {
 		grid.insertRow(rowParam);
 
 		CellHandle cell = grid.getCell(summaryGridRowCount, 1);
+		TextItemHandle serialNo = factory.newTextItem(null);
+		serialNo.setContent(Integer.toString(summaryGridRowCount - 1));
+		cell.getContent().add(serialNo);
+
+		cell = grid.getCell(summaryGridRowCount, 2);
 		TextItemHandle sheetNameText = factory.newTextItem(null);
 		sheetNameText.setContent(sheetName);
 		cell.getContent().add(sheetNameText);
 
-		cell = grid.getCell(summaryGridRowCount, 2);
+		cell = grid.getCell(summaryGridRowCount, 3);
 		TextItemHandle mismatchType = factory.newTextItem(null);
 		mismatchType.setContent("Missing Column");
 		cell.getContent().add(mismatchType);
 
-		cell = grid.getCell(summaryGridRowCount, posn + 4);
+		cell = grid.getCell(summaryGridRowCount, posn + 5);
 
 		TextItemHandle exception = factory.newTextItem(null);
 		exception.setContent(column);
@@ -324,22 +335,27 @@ public class ExcelComparator {
 		grid.insertRow(rowParam);
 
 		CellHandle cell = grid.getCell(summaryGridRowCount, 1);
+		TextItemHandle serialNo = factory.newTextItem(null);
+		serialNo.setContent(Integer.toString(summaryGridRowCount - 1));
+		cell.getContent().add(serialNo);
+
+		cell = grid.getCell(summaryGridRowCount, 2);
 		TextItemHandle sheetNameText = factory.newTextItem(null);
 		sheetNameText.setContent(sheetName);
 		cell.getContent().add(sheetNameText);
 
-		cell = grid.getCell(summaryGridRowCount, 2);
+		cell = grid.getCell(summaryGridRowCount, 3);
 		TextItemHandle mismatchType = factory.newTextItem(null);
 		mismatchType.setContent("Row Count Mismatch");
 		cell.getContent().add(mismatchType);
 
-		cell = grid.getCell(summaryGridRowCount, 5);
+		cell = grid.getCell(summaryGridRowCount, 6);
 
 		TextItemHandle exception1 = factory.newTextItem(null);
 		exception1.setContent(Integer.toString(physicalNumberOfRows1));
 		cell.getContent().add(exception1);
 
-		cell = grid.getCell(summaryGridRowCount, 6);
+		cell = grid.getCell(summaryGridRowCount, 7);
 
 		TextItemHandle exception2 = factory.newTextItem(null);
 		exception1.setContent(Integer.toString(physicalNumberOfRows2));
@@ -362,7 +378,11 @@ public class ExcelComparator {
 			text.setContent("Source File 2 was not found on the path specified.");
 		}
 
+		text.setProperty("style", "open-cell");
+
 		design.getBody().add(text);
+
+		addStyleSheet();
 
 	}
 
@@ -374,16 +394,21 @@ public class ExcelComparator {
 		grid.insertRow(rowParam);
 
 		CellHandle cell = grid.getCell(summaryGridRowCount, 1);
+		TextItemHandle serialNo = factory.newTextItem(null);
+		serialNo.setContent(Integer.toString(summaryGridRowCount - 1));
+		cell.getContent().add(serialNo);
+
+		cell = grid.getCell(summaryGridRowCount, 2);
 		TextItemHandle sheetName = factory.newTextItem(null);
 		sheetName.setContent(currentSheet);
 		cell.getContent().add(sheetName);
 
-		cell = grid.getCell(summaryGridRowCount, 2);
+		cell = grid.getCell(summaryGridRowCount, 3);
 		TextItemHandle mismatchType = factory.newTextItem(null);
 		mismatchType.setContent("Missing Sheet");
 		cell.getContent().add(mismatchType);
 
-		cell = grid.getCell(summaryGridRowCount, posn + 4);
+		cell = grid.getCell(summaryGridRowCount, posn + 5);
 
 		TextItemHandle exception = factory.newTextItem(null);
 		exception.setContent(currentSheet);
@@ -396,15 +421,13 @@ public class ExcelComparator {
 		GridHandle grid = (GridHandle) design.findElement("ParameterGrid");
 		TextItemHandle source1 = factory.newTextItem(null);
 		source1.setProperty("contentType", "HTML");
-		source1.setContent(sourcePath1);
+		source1.setContent("Source 1: " + sourcePath1);
 		TextItemHandle source2 = factory.newTextItem(null);
 		source2.setProperty("contentType", "HTML");
-		source2.setContent(sourcePath2);
-		CellHandle cell = grid.getCell(1, 2);
-		cell.setProperty("style", "cell");
+		source2.setContent("Source 2: " + sourcePath2);
+		CellHandle cell = grid.getCell(1, 1);
 		cell.getContent().add(source1);
-		cell = grid.getCell(2, 2);
-		cell.setProperty("style", "cell");
+		cell = grid.getCell(2, 1);
 		cell.getContent().add(source2);
 
 	}
@@ -417,26 +440,34 @@ public class ExcelComparator {
 
 		// add style to parameter grid
 		GridHandle grid = (GridHandle) design.findElement("ParameterGrid");
-		grid.getCell(1, 1).setProperty("style", "cell");
-		grid.getCell(1, 2).setProperty("style", "cell");
-		grid.getCell(2, 1).setProperty("style", "cell");
-		grid.getCell(2, 2).setProperty("style", "cell");
-		
+		grid.getCell(1, 1).setProperty("style", "open-cell");
+		grid.getCell(2, 1).setProperty("style", "open-cell");
 
-		// add style to summary grid
-		grid = (GridHandle) design.findElement("SummaryGrid");
-		for(int i=1; i<=summaryGridRowCount; i++) {
-			grid.getCell(i, 1).setProperty("style", "cell");
-			grid.getCell(i, 2).setProperty("style", "cell");
-			grid.getCell(i, 3).setProperty("style", "cell");
-			grid.getCell(i, 4).setProperty("style", "cell");
-			grid.getCell(i, 5).setProperty("style", "cell");
-			grid.getCell(i, 6).setProperty("style", "cell");
-			
-		}
-		
-		for(int i=1; i<=6; i++) {
-			grid.getCell(1, i).setProperty("style", "header-cell");
+		// add style for run date
+		TextItemHandle runDate = (TextItemHandle) design.findElement("runDate");
+		runDate.setProperty("style", "open-cell");
+
+		// add style for table title
+		TextItemHandle tableTitle = (TextItemHandle) design.findElement("tableTitle");
+		tableTitle.setProperty("style", "open-cell");
+
+		if (summaryGridRowCount > 1) {
+			// add style to summary grid
+			grid = (GridHandle) design.findElement("SummaryGrid");
+			for (int i = 1; i <= summaryGridRowCount; i++) {
+				grid.getCell(i, 1).setProperty("style", "cell");
+				grid.getCell(i, 2).setProperty("style", "cell");
+				grid.getCell(i, 3).setProperty("style", "cell");
+				grid.getCell(i, 4).setProperty("style", "cell");
+				grid.getCell(i, 5).setProperty("style", "cell");
+				grid.getCell(i, 6).setProperty("style", "cell");
+				grid.getCell(i, 7).setProperty("style", "cell");
+				
+			}
+
+			for (int i = 1; i <= 7; i++) {
+				grid.getCell(1, i).setProperty("style", "header-cell");
+			}
 		}
 
 	}

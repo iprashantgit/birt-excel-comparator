@@ -9,7 +9,7 @@ import com.dev4k.birt.excelcomparator.designer.ReportDesigner;
 import com.dev4k.birt.excelcomparator.engine.BirtReportEngine;
 
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource("file:application.properties")
 public class ApplicationConfig {
 	
 	@Bean
