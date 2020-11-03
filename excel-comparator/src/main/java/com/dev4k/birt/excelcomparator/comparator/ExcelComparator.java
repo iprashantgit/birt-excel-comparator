@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -149,8 +150,30 @@ public class ExcelComparator {
 
 		// check if number of rows are equal
 		if (sheet1.getPhysicalNumberOfRows() != sheet2.getPhysicalNumberOfRows()) {
+
+			// find which rows are missing
+			List<String> row1a = new ArrayList<>();
+			for (int i = 1; i < sheet1.getPhysicalNumberOfRows(); i++) {
+				Row row = sheet1.getRow(i);
+				row1a.add(formatter.formatCellValue(row.getCell(0)));
+			}
+
+			List<String> row2a = new ArrayList<>();
+			for (int i = 1; i < sheet2.getPhysicalNumberOfRows(); i++) {
+				Row row = sheet2.getRow(i);
+				row2a.add(formatter.formatCellValue(row.getCell(0)));
+			}
+
+			List<String> differences1 = row1a.stream().filter(element -> !row2a.contains(element))
+					.collect(Collectors.toList());
+
+			List<String> differences2 = row2a.stream().filter(element -> !row1a.contains(element))
+					.collect(Collectors.toList());
+
 			addRowCountMismatch(sheet1.getSheetName(), sheet1.getPhysicalNumberOfRows(),
-					sheet2.getPhysicalNumberOfRows());
+					sheet2.getPhysicalNumberOfRows(), differences1, differences2);
+
+			return;
 		}
 
 		// create data structure to store header metadata
@@ -326,8 +349,8 @@ public class ExcelComparator {
 
 	}
 
-	private void addRowCountMismatch(String sheetName, int physicalNumberOfRows1, int physicalNumberOfRows2)
-			throws SemanticException {
+	private void addRowCountMismatch(String sheetName, int physicalNumberOfRows1, int physicalNumberOfRows2,
+			List<String> missedValues1, List<String> missedValues2) throws SemanticException {
 		summaryGridRowCount++;
 
 		GridHandle grid = (GridHandle) design.findElement("SummaryGrid");
@@ -352,13 +375,13 @@ public class ExcelComparator {
 		cell = grid.getCell(summaryGridRowCount, 6);
 
 		TextItemHandle exception1 = factory.newTextItem(null);
-		exception1.setContent(Integer.toString(physicalNumberOfRows1));
+		exception1.setContent(Integer.toString(physicalNumberOfRows1) +" Rows, Missing Keys: "+ missedValues2.toString());
 		cell.getContent().add(exception1);
 
 		cell = grid.getCell(summaryGridRowCount, 7);
 
 		TextItemHandle exception2 = factory.newTextItem(null);
-		exception1.setContent(Integer.toString(physicalNumberOfRows2));
+		exception2.setContent(Integer.toString(physicalNumberOfRows2) + " Rows, Missing Keys: " + missedValues1.toString());
 		cell.getContent().add(exception2);
 
 	}
@@ -462,7 +485,7 @@ public class ExcelComparator {
 				grid.getCell(i, 5).setProperty("style", "cell");
 				grid.getCell(i, 6).setProperty("style", "cell");
 				grid.getCell(i, 7).setProperty("style", "cell");
-				
+
 			}
 
 			for (int i = 1; i <= 7; i++) {
